@@ -250,12 +250,16 @@ void test_subdaemons(const struct lightningd *ld)
 		 */
 		const char *dpath = path_join(tmpctx, ld->daemon_dir, subdaemons[i]);
 		const char *verstring;
+<<<<<<< HEAD
 		/*~ CCAN's pipecmd module is like popen for grownups: it
 		 * takes pointers to fill in stdout, stdin and stderr file
 		 * descriptors if desired, and the remainder of arguments
 		 * are the command and its argument. */
 		pid_t pid = pipecmd(&outfd, NULL, &outfd,
 				    dpath, "--version", NULL);
+=======
+		pid_t pid = pipecmd(&outfd, NULL, &outfd,dpath, "--version", NULL);
+>>>>>>> upstream/master
 
 		/*~ Our logging system: spam goes in at log_debug level, but
 		 * logging is mainly added by developer necessity and removed
@@ -280,11 +284,16 @@ void test_subdaemons(const struct lightningd *ld)
 		 * err (ccan/err, but usually just the BSD <err.h>) prints */
 		if (!verstring)
 			err(1, "Could not get output from %s", dpath);
+<<<<<<< HEAD
 		/*~ strstarts is from CCAN/str. */
 		if (!strstarts(verstring, version())
 		    || verstring[strlen(version())] != '\n')
 			errx(1, "%s: bad version '%s'",
 			     subdaemons[i], verstring);
+=======
+		//if (!strstarts(verstring, version()) || verstring[strlen(version())] != '\n')
+		//	errx(1, "(%s): bad version (%s)", daemons[i], verstring);
+>>>>>>> upstream/master
 	}
 }
 

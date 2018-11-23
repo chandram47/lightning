@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#ifdef notnow
 
 int test_main(int argc, char *argv[]);
 ssize_t test_read(int fd, void *buf, size_t len);
@@ -80,13 +81,20 @@ ssize_t test_read(int fd UNUSED, void *buf, size_t len)
 	"            {\"type\": \"SKIPPED\", \"num_skipped\": 22},\n"	\
 	"            {\"type\": \"DEBUG\", \"time\": \"241693.051558854\", \"source\": \"lightning_gossipd(14581):\", \"log\": \"TRACE: nonlocal_gossip_broadcast_done\"},\n"
 #define TAILER	"] } }"
+#endif
 
-int main(int argc UNUSED, char *argv[])
+int main(int argc, char *argv[])
 {
+<<<<<<< HEAD
 	setup_locale();
 
 	char *fake_argv[] = { argv[0], "--lightning-dir=/tmp/", "test", NULL };
 
+=======
+#ifdef notnow
+	char *fake_argv[] = { argv[0], "--lightning-dir=/tmp/", "test", NULL };
+
+>>>>>>> upstream/master
 	/* sizeof() is an overestimate, but we don't care. */
 	response = tal_arr(NULL, char,
 			   sizeof(HEADER)
@@ -112,5 +120,6 @@ int main(int argc UNUSED, char *argv[])
 	max_read_return = -1;
 	assert(test_main(3, fake_argv) == 0);
 	tal_free(response);
+#endif
 	return 0;
 }

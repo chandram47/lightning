@@ -717,6 +717,12 @@ void setup_jsonrpc(struct lightningd *ld, const char *rpc_filename)
 {
 	struct sockaddr_un addr;
 	int fd, old_umask;
+<<<<<<< HEAD
+=======
+printf("setup_jsonrpc.(%s)\n",rpc_filename);
+	if (streq(rpc_filename, ""))
+		return;
+>>>>>>> upstream/master
 
 	if (streq(rpc_filename, "/dev/tty")) {
 		fd = open(rpc_filename, O_RDWR);

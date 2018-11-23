@@ -29,6 +29,8 @@ external/libbacktrace.a
 external/libbacktrace.la
 test/test_protocol
 test/test_sphinx
+privatebet/bet
+
 tests/.pytest.restart
 gossip_store
 .pytest_cache

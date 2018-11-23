@@ -29,4 +29,19 @@ bool extract_channel_id(const u8 *in_pkt, struct channel_id *channel_id);
  * the network, as detailed within [BOLT #7]
  */
 #define CHANNEL_FLAGS_ANNOUNCE_CHANNEL 1
+<<<<<<< HEAD
+=======
+
+/* BOLT #2:
+ *
+ * The sender MUST set `funding_satoshis` to less than 2^24 satoshi.
+ */
+//#define MAX_FUNDING_SATOSHI ((1 << 24) - 1)
+//#define LIGHTNING_MAXFUNDING ((uint64_t)1 << 44) // ~100,000 * 100,000,000 satoshis
+#define MAX_FUNDING_SATOSHI ((uint64_t)1 << 44) // ~100,000 * 100,000,000 satoshis
+
+/* Compare two short_channel_ids and return true if they are the equal */
+bool short_channel_id_eq(const struct short_channel_id *a,
+			 const struct short_channel_id *b);
+>>>>>>> upstream/master
 #endif /* LIGHTNING_WIRE_PEER_WIRE_H */

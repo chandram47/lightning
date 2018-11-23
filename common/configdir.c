@@ -18,15 +18,14 @@ static char *default_configdir(const tal_t *ctx)
 	if (!env)
 		return ".";
 
-	path = path_join(ctx, env, ".lightning");
+	path = path_join(ctx, env, ".chipsln");
 	return path;
 }
 
-void configdir_register_opts(const tal_t *ctx,
-			     char **configdir, char **rpc_filename)
+void configdir_register_opts(const tal_t *ctx,char **configdir, char **rpc_filename)
 {
 	*configdir = default_configdir(ctx);
-	*rpc_filename =	tal_strdup(ctx, "lightning-rpc");
+	*rpc_filename = tal_strdup(ctx, "chipsln-rpc");
 
 	opt_register_early_arg("--lightning-dir=<dir>", opt_set_talstr, opt_show_charp,
 			       configdir,

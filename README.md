@@ -1,4 +1,4 @@
-# c-lightning: A specification compliant Lightning Network implementation in C
+# c-lightning: A specification compliant Lightning Network implementation in C -> ported to work with CHIPS
 
 c-lightning is a [standard compliant][std] implementation of the Lightning
 Network protocol.
@@ -44,10 +44,14 @@ mailing list [lightning-dev@lists.linuxfoundation.org][ml2].
 
 ## Getting Started
 
+<<<<<<< HEAD
 c-lightning currently only works on Linux (and possibly Mac OS with some
 tweaking), and requires a locally (or remotely) running `bitcoind` (version 0.15 or
 above) that is fully caught up with the network you're testing on.
 Pruning (prune=n option in bitcoin.conf) is not currently supported.
+=======
+c-lightning currently only works on Linux (and possibly Mac OS with some tweaking), and requires a locally running `chipsd` that is fully caught up with the network you're testing on.
+>>>>>>> upstream/master
 
 ### Installation
 
@@ -55,6 +59,7 @@ Please refer to the [installation documentation](doc/INSTALL.md) for
 detailed instructions.
 For the impatient here's the gist of it for Ubuntu and Debian:
 
+<<<<<<< HEAD
     sudo apt-get update
     sudo apt-get install -y \
       autoconf automake build-essential git libtool libgmp-dev \
@@ -120,23 +125,24 @@ services:
 volumes:
   bitcoin_datadir:
   clightning_bitcoin_datadir:
+=======
+```
+sudo apt-get install -y autoconf git build-essential libtool libgmp-dev libsqlite3-dev python python3
+git clone https://github.com/jl777/lightning
+cd lightning
+make
+>>>>>>> upstream/master
 ```
 
 ### Starting `lightningd`
 
-In order to start `lightningd` you will need to have a local `bitcoind`
-node running in either testnet or regtest mode:
+In order to start `lightningd` you will need to have a local `chipsd` node running:
 
-    bitcoind -daemon -testnet
+```
+chipsd -daemon
+```
 
-Wait until `bitcoind` has synchronized with the testnet network.
-
-Make sure that you do not have `walletbroadcast=0` in your
-`~/.bitcoin/bitcoin.conf`, or you may run into trouble.
-Notice that currently pruned nodes are not supported and may result in
-`lightningd` being unable to synchronize with the blockchain.
-
-You can start `lightningd` with the following command:
+Once `chipsd` has synchronized with the network, you can start `lightningd` with the following command:
 
     lightningd/lightningd --network=testnet --log-level=debug
 
@@ -152,10 +158,11 @@ open a channel:
     # Returns an address <address>
     cli/lightning-cli newaddr
 
-    # Returns a transaction id <txid>
-    bitcoin-cli -testnet sendtoaddress <address> <amount_in_bitcoins>
+# Returns a transaction id <txid>
+chips-cli sendtoaddress <address> <amount>
 
-`lightningd` will register the funds once the transaction is confirmed.
+# Retrieves the raw transaction <rawtx>
+chips-cli getrawtransaction <txid>
 
 If you don't have any testcoins you can get a few from a faucet such as
 [TPs' testnet faucet][tps] or [Kiwi's testnet faucet][kiw].
@@ -251,6 +258,8 @@ file.
 
 To use a configuration file, create a file named "config" within your
 ".lightning" directory. Usually, this will be ~/.lightning/config
+
+The sender needs to compute a route to the recipient, and use that route to actually send the payment:
 
 Configuration options are set using a key=value pair on each line of
 the file, for example:

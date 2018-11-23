@@ -558,7 +558,9 @@ static void handle_peer_add_htlc(struct peer *peer, const u8 *msg)
 		peer_failed(&peer->cs,
 			    &peer->channel_id,
 			    "Bad peer_add_htlc %s", tal_hex(msg, msg));
-
+printf("EXPIRY.%d\n",cltv_expiry);
+    // breaks things cltv_expiry++;
+    
 	add_err = channel_add_htlc(peer->channel, REMOTE, id, amount_msat,
 				   cltv_expiry, &payment_hash,
 				   onion_routing_packet, &htlc);
@@ -2320,8 +2322,7 @@ static void handle_offer_htlc(struct peer *peer, const u8 *inmsg)
 		sync_crypto_write(&peer->cs, PEER_FD, take(msg));
 		start_commit_timer(peer);
 		/* Tell the master. */
-		msg = towire_channel_offer_htlc_reply(NULL, peer->htlc_id,
-						      0, NULL);
+		msg = towire_channel_offer_htlc_reply(inmsg, peer->htlc_id,0, NULL);
 		wire_sync_write(MASTER_FD, take(msg));
 		peer->htlc_id++;
 		return;
@@ -2331,8 +2332,7 @@ static void handle_offer_htlc(struct peer *peer, const u8 *inmsg)
 		goto failed;
 	case CHANNEL_ERR_DUPLICATE:
 	case CHANNEL_ERR_DUPLICATE_ID_DIFFERENT:
-		status_failed(STATUS_FAIL_MASTER_IO,
-			      "Duplicate HTLC %"PRIu64, peer->htlc_id);
+		status_failed(STATUS_FAIL_MASTER_IO,"Duplicate HTLC %"PRIu64, peer->htlc_id);
 
 	/* FIXME: Fuzz the boundaries a bit to avoid probing? */
 	case CHANNEL_ERR_MAX_HTLC_VALUE_EXCEEDED:
@@ -2345,8 +2345,12 @@ static void handle_offer_htlc(struct peer *peer, const u8 *inmsg)
 		goto failed;
 	case CHANNEL_ERR_HTLC_BELOW_MINIMUM:
 		failcode = WIRE_AMOUNT_BELOW_MINIMUM;
+<<<<<<< HEAD:channeld/channeld.c
 		failmsg = tal_fmt(inmsg, "HTLC too small (%"PRIu64" minimum)",
 				  peer->channel->config[REMOTE].htlc_minimum_msat);
+=======
+		failmsg = tal_fmt(inmsg, "HTLC too small (%u minimum)",htlc_minimum_msat(peer->channel, REMOTE));
+>>>>>>> upstream/master:channeld/channel.c
 		goto failed;
 	case CHANNEL_ERR_TOO_MANY_HTLCS:
 		failcode = WIRE_TEMPORARY_CHANNEL_FAILURE;

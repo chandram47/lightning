@@ -1,7 +1,13 @@
 #! /usr/bin/make
+<<<<<<< HEAD
 VERSION_NAME=Principled Opposition to SegWit
 VERSION=$(shell git describe --always --dirty=-modded --abbrev=7)
 DISTRO=$(shell lsb_release -is 2>/dev/null || echo unknown)-$(shell lsb_release -rs 2>/dev/null || echo unknown)
+=======
+NAME=CHIPS LN
+
+# TODO: Decide: c-lightning, lightningd, lightning?
+>>>>>>> upstream/master
 PKGNAME = c-lightning
 
 # We use our own internal ccan copy.
@@ -42,6 +48,7 @@ PYTEST_OPTS := -v
 
 # This is where we add new features as bitcoin adds them.
 FEATURES :=
+
 
 CCAN_OBJS :=					\
 	ccan-asort.o				\
@@ -180,7 +187,7 @@ CONFIGURATOR_CC := $(CC)
 LDFLAGS = $(PIE_LDFLAGS)
 LDLIBS = -L/usr/local/lib -lm -lgmp -lsqlite3 -lz $(COVFLAGS)
 
-default: all-programs all-test-programs
+default: all-programs all-test-programs lightning-cli-all
 
 config.vars ccan/config.h: configure
 	@if [ ! -f config.vars ]; then echo 'The 1990s are calling: use ./configure!' >&2; exit 1; fi

@@ -827,8 +827,39 @@ static void json_fund_channel(struct command *cmd,
 	fc->push_msat = 0;
 	fc->channel_flags = OUR_CHANNEL_FLAGS;
 
+<<<<<<< HEAD
 	if (!wtx_select_utxos(&fc->wtx, *feerate_per_kw,
 			      BITCOIN_SCRIPTPUBKEY_P2WSH_LEN))
+=======
+	/* Try to do this now, so we know if insufficient funds. */
+	/* FIXME: dustlimit */
+    if (all_funds) {
+		fc->utxomap = wallet_select_all(cmd, cmd->ld->wallet,
+			feerate_per_kw,
+			BITCOIN_SCRIPTPUBKEY_P2WSH_LEN,
+			&fc->funding_satoshi,
+			&fee_estimate);
+		if (!fc->utxomap || fc->funding_satoshi < 546) {
+			command_fail(cmd, "Cannot afford fee %"PRIu64,
+				     fee_estimate);
+			return;
+		}
+		fc->change = 0;
+	} else {
+		fc->utxomap = build_utxos(fc, cmd->ld, fc->funding_satoshi,
+			feerate_per_kw,
+			600, BITCOIN_SCRIPTPUBKEY_P2WSH_LEN,
+			&fc->change, &fc->change_keyindex);
+		if (!fc->utxomap) {
+			command_fail(cmd, "Cannot afford funding transaction");
+			return;
+		}
+	}
+
+	if (fc->funding_satoshi > MAX_FUNDING_SATOSHI) {
+		command_fail(cmd, "Funding satoshi must be <= %lld",
+			     (long long)MAX_FUNDING_SATOSHI);
+>>>>>>> upstream/master
 		return;
 
 	assert(fc->wtx.amount <= max_funding_satoshi);

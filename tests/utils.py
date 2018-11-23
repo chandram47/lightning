@@ -19,6 +19,10 @@ BITCOIND_CONFIG = {
     "regtest": 1,
     "rpcuser": "rpcuser",
     "rpcpassword": "rpcpass",
+<<<<<<< HEAD
+=======
+    "rpcport": 57776,
+>>>>>>> upstream/master
 }
 
 
@@ -253,22 +257,23 @@ class SimpleBitcoinProxy:
 
 class BitcoinD(TailableProc):
 
+<<<<<<< HEAD
     def __init__(self, bitcoin_dir="/tmp/bitcoind-test", rpcport=None):
         TailableProc.__init__(self, bitcoin_dir, verbose=False)
 
         if rpcport is None:
             rpcport = reserve()
+=======
+    def __init__(self, bitcoin_dir="/root/.chips", rpcport=57776):
+        TailableProc.__init__(self, bitcoin_dir)
+>>>>>>> upstream/master
 
         self.bitcoin_dir = bitcoin_dir
         self.rpcport = rpcport
-        self.prefix = 'bitcoind'
-
-        regtestdir = os.path.join(bitcoin_dir, 'regtest')
-        if not os.path.exists(regtestdir):
-            os.makedirs(regtestdir)
+        self.prefix = 'chipsd'
 
         self.cmd_line = [
-            'bitcoind',
+            'chipsd',
             '-datadir={}'.format(bitcoin_dir),
             '-printtoconsole',
             '-server',
@@ -277,11 +282,17 @@ class BitcoinD(TailableProc):
         ]
         # For up to and including 0.16.1, this needs to be in main section.
         BITCOIND_CONFIG['rpcport'] = rpcport
+<<<<<<< HEAD
         # For after 0.16.1 (eg. 3f398d7a17f136cd4a67998406ca41a124ae2966), this
         # needs its own [regtest] section.
         BITCOIND_REGTEST = {'rpcport': rpcport}
         btc_conf_file = os.path.join(bitcoin_dir, 'bitcoin.conf')
         write_config(btc_conf_file, BITCOIND_CONFIG, BITCOIND_REGTEST)
+=======
+        btc_conf_file = os.path.join(regtestdir, 'chips.conf')
+        write_config(os.path.join(bitcoin_dir, 'chips.conf'), BITCOIND_CONFIG)
+        write_config(btc_conf_file, BITCOIND_CONFIG)
+>>>>>>> upstream/master
         self.rpc = SimpleBitcoinProxy(btc_conf_file=btc_conf_file)
 
     def start(self):

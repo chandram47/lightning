@@ -463,7 +463,17 @@ static const struct config testnet_config = {
 
 	/* Be aggressive on testnet. */
 	.cltv_expiry_delta = 6,
+<<<<<<< HEAD
 	.cltv_final = 10,
+=======
+	.cltv_final = 6,
+
+	/* Don't lock up channel for more than 5 days. */
+	.max_htlc_expiry = 5 * 6 * 24,
+
+	/* How often to bother bitcoind. */
+	.poll_time = TIME_FROM_SEC(1),
+>>>>>>> upstream/master
 
 	/* Send commit 10msec after receiving; almost immediately. */
 	.commit_time_ms = 10,
@@ -471,7 +481,7 @@ static const struct config testnet_config = {
 	/* Allow dust payments */
 	.fee_base = 1,
 	/* Take 0.001% */
-	.fee_per_satoshi = 10,
+	.fee_per_satoshi = 1,
 
 	/* BOLT #7:
 	 *
@@ -498,11 +508,19 @@ static const struct config testnet_config = {
 /* aka. "Dude, where's my coins?" */
 static const struct config mainnet_config = {
 	/* ~one day to catch cheating attempts. */
-	.locktime_blocks = 6 * 24,
+	.locktime_blocks = 6 * 60 * 24,
 
+<<<<<<< HEAD
 	/* They can have up to 14 days, maximumu value that lnd will ask for by default. */
 	/* FIXME Convince lnd to use more reasonable defaults... */
 	.locktime_max = 14 * 24 * 6,
+=======
+	/* They can have up to 3 days. */
+	.locktime_max = 3 * 6 * 60 * 24,
+
+	/* You should get in within 10 blocks. */
+	.anchor_onchain_wait = 10,
+>>>>>>> upstream/master
 
 	/* We're fairly trusting, under normal circumstances. */
 	.anchor_confirms = 3,
@@ -524,17 +542,32 @@ static const struct config mainnet_config = {
 
 	/* BOLT #2:
 	 *
+<<<<<<< HEAD
 	 * 4. the minimum `cltv_expiry` accepted for terminal payments: the
 	 *    worst case for the terminal node C is `2R+G+S` blocks */
 	.cltv_final = 10,
 
 	/* Send commit 10msec after receiving; almost immediately. */
 	.commit_time_ms = 10,
+=======
+	 * The minimum `cltv_expiry` we will accept for terminal payments: the
+	 * worst case for the terminal node C lower at `2R+G+S` blocks */
+	.cltv_final = 8,
+
+	/* Don't lock up channel for more than 5 days. */
+	.max_htlc_expiry = 5 * 6 * 60 * 24,
+
+	/* How often to bother bitcoind. */
+	.poll_time = TIME_FROM_SEC(1),
+
+	/* Send commit 10msec after receiving; almost immediately. */
+	.commit_time = TIME_FROM_MSEC(5),
+>>>>>>> upstream/master
 
 	/* Discourage dust payments */
 	.fee_base = 1000,
 	/* Take 0.001% */
-	.fee_per_satoshi = 10,
+	.fee_per_satoshi = 1,
 
 	/* BOLT #7:
 	 *

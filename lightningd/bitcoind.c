@@ -232,7 +232,7 @@ static void next_bcli(struct bitcoind *bitcoind, enum bitcoind_prio prio)
 	bcli->pid = pipecmdarr(&bcli->fd, NULL, &bcli->fd,
 			       cast_const2(char **, bcli->args));
 	if (bcli->pid < 0)
-		fatal("%s exec failed: %s", bcli->args[0], strerror(errno));
+		fatal("(%s) exec failed: %s", bcli->args[0], strerror(errno));
 
 	bcli->start = time_now();
 
@@ -275,7 +275,6 @@ start_bitcoin_cli(struct bitcoind *bitcoind,
 {
 	va_list ap;
 	struct bitcoin_cli *bcli = tal(bitcoind, struct bitcoin_cli);
-
 	bcli->bitcoind = bitcoind;
 	bcli->process = process;
 	bcli->prio = prio;
@@ -325,9 +324,18 @@ static bool extract_feerate(struct bitcoin_cli *bcli,
 
 	feeratetok = json_get_member(output, tokens, "feerate");
 	if (!feeratetok)
-		return false;
+	{
+		//return false;
+		// do nothing till some fix
+	}
 
+<<<<<<< HEAD
 	return json_tok_bitcoin_amount(output, feeratetok, feerate);
+=======
+	//return json_tok_double(output, feeratetok, feerate);
+	*feerate=0.0001;
+	return true;
+>>>>>>> upstream/master
 }
 
 struct estimatefee {
@@ -443,7 +451,6 @@ void bitcoind_sendrawtx_(struct bitcoind *bitcoind,
 			  cb, arg,
 			  "sendrawtransaction", hextx, NULL);
 }
-
 static bool process_rawblock(struct bitcoin_cli *bcli)
 {
 	struct bitcoin_block *blk;
@@ -481,16 +488,18 @@ static bool process_getblockcount(struct bitcoin_cli *bcli)
 {
 	u32 blockcount;
 	char *p, *end;
-	void (*cb)(struct bitcoind *bitcoind,
-		   u32 blockcount,
-		   void *arg) = bcli->cb;
-
+	void (*cb)(struct bitcoind *bitcoind,u32 blockcount,void *arg) = bcli->cb;
 	p = tal_strndup(bcli, bcli->output, bcli->output_bytes);
 	blockcount = strtol(p, &end, 10);
 	if (end == p || *end != '\n')
 		fatal("%s: gave non-numeric blockcount %s",
+<<<<<<< HEAD
 		      bcli_args(tmpctx, bcli), p);
 
+=======
+		      bcli_args(bcli), p);
+    printf("process blockcount.(%s)\n",p);
+>>>>>>> upstream/master
 	cb(bcli->bitcoind, blockcount, bcli->cb_arg);
 	return true;
 }

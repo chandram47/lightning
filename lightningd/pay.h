@@ -6,6 +6,7 @@
 #include <bitcoin/short_channel_id.h>
 #include <wire/gen_onion_wire.h>
 
+#define LIGHTNING_BLOCKSMARGIN 10
 struct htlc_out;
 struct json_stream;
 struct lightningd;

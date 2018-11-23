@@ -10,6 +10,7 @@ struct privkey;
 struct pubkey;
 struct utxo;
 
+#define LIGHTNING_MAXFUNDING ((uint64_t)1 << 44) // ~100,000 * 100,000,000 satoshis
 /**
  * funding_tx: create a P2WSH funding transaction for a channel.
  * @ctx: context to tal from.
